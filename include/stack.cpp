@@ -65,11 +65,6 @@ void stack<T>::push(T const &item)
 		array_ = buff;
 		array_size_ = size;
 		array_[count_ - 1] = item;
-		for (int i = 0; i < count_; i++) 
-		{
-			std::cout << array_[i] << "[" << i << "]" << " ";
-		}
-		std::cout << std::endl;
 	}
 }
 template<typename T>
