@@ -87,13 +87,11 @@ auto stack<T>::swap(stack & right) -> void
 }
 
 template<typename T>
-auto stack<T>::operator=(stack const & right) -> stack & {
-	if (this != &right) {
-	T* buff = newcopy(right.array_, right.array_size_, right.count_);
-	delete[] array_;
-	array_ = buff;
-	count_ = right.count_;
-	array_size_ = right.array_size_;
+auto stack<T>::operator=(stack const & right) -> stack & 
+{
+	if (this != &right) 
+	{
+		(stack(right)).swap(*this);
 	}
 	return *this;
 }
