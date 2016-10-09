@@ -23,7 +23,6 @@ int main()
 	a.push(1);
 	a.push(2);
 	a.push(3);
-	a.push(4);
 	stack<int> b;
 	b.push(2);
 	system("pause");
