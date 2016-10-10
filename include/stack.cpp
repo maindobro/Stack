@@ -17,17 +17,6 @@ public:
 	auto operator=(stack const & right)->stack &;		// ïåðåîïðåäåëåíèå îïåðàòîðà, ïðèñâàèâàåò çíà÷åíèå êîíòåéíåðó"
 };
 
-int main()
-{
-	stack<int> a;
-	a.push(1);
-	a.push(2);
-	a.push(3);
-	stack<int> b;
-	b.push(2);
-	system("pause");
-}
-
 template <typename T>
 size_t stack<T>::count() const
 {
