@@ -10,6 +10,7 @@ private:
     auto swap(stack & right) -> void;					// ìåíÿåò ñîäåðæèìîå ñòåêîâ
 public:
     stack();											// êîíñòðóêòîð
+    stack(stack const &);
     ~stack();											// äåñòðóêòîð
     size_t count() const;
     auto push(T const &) -> void;						// ïîìåñòèòü ýëåìåíò â âåðøèíó ñòåêà
@@ -29,6 +30,12 @@ stack<T>::stack()
     array_size_ = 0;
     array_ = new T[array_size_];
     count_ = 0;
+}
+
+template<typename T>
+stack<T>::stack(stack const & other):array_size_(other.array_size_), count_(other.count_),array_(item.array_, item.array_size_,item.count_)
+{
+
 }
 
 template <typename T>
