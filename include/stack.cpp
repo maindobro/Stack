@@ -33,7 +33,7 @@ stack<T>::stack()
 }
 
 template<typename T>
-stack<T>::stack(stack const & other):array_size_(other.array_size_), count_(other.count_),array_(item.array_, item.array_size_,item.count_)
+stack<T>::stack(stack const & other):array_size_(other.array_size_), count_(other.count_),array_(other.array_, other.array_size_,other.count_)
 {
 
 }
