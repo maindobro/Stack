@@ -4,20 +4,20 @@ template <typename T>
 class stack
 {
 public:
-	stack();											// êîíñòðóêòîð
-	stack(stack const &);
-	~stack();											// äåñòðóêòîð
-	size_t count() const;
-	auto push(T const &) -> void;						// ïîìåñòèòü ýëåìåíò â âåðøèíó ñòåêà
-	T pop();											// óäàëèòü ýëåìåíò èç âåðøèíû ñòåêà è âåðíóòü åãî
-	auto operator=(stack const & right)->stack &;		// ïåðåîïðåäåëåíèå îïåðàòîðà, ïðèñâàèâàåò çíà÷åíèå êîíòåéíåðó"
+	stack();							//noexcept
+	stack(stack const &);						//strong
+	~stack();							//noexcept
+	size_t count() const;						//noexcept
+	auto push(T const &) -> void;					//strong
+	T pop();							//basic
+	auto operator=(stack const & right)->stack &;			//strong
 private:
-	T *array_;											// óêàçàòåëü íà ñòåê
-	size_t array_size_;									// êîëè÷åñòâî ýëåìåíòîâ â ñòåêå
-	size_t count_;										// íîìåð òåêóùåãî ýëåìåíòà ñòåêà
+	T *array_;							
+	size_t array_size_;							
+	size_t count_;							
 };
 template<typename T>
-auto newcopy(const T * item, size_t size, size_t count) -> T*
+auto newcopy(const T * item, size_t size, size_t count) -> T*		//strong
 {
 	T * buff = new T[size];
 	std::copy(item, item + count, buff);
