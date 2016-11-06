@@ -3,11 +3,6 @@
 template <typename T>
 class stack
 {
-private:
-    T *array_;											// óêàçàòåëü íà ñòåê
-    size_t array_size_;									// êîëè÷åñòâî ýëåìåíòîâ â ñòåêå
-    size_t count_;										// íîìåð òåêóùåãî ýëåìåíòà ñòåêà
-    auto swap(stack & right) -> void;					// ìåíÿåò ñîäåðæèìîå ñòåêîâ
 public:
     stack();											// êîíñòðóêòîð
     stack(stack const &);
@@ -16,8 +11,18 @@ public:
     auto push(T const &) -> void;						// ïîìåñòèòü ýëåìåíò â âåðøèíó ñòåêà
     T pop();											// óäàëèòü ýëåìåíò èç âåðøèíû ñòåêà è âåðíóòü åãî
     auto operator=(stack const & right)->stack &;		// ïåðåîïðåäåëåíèå îïåðàòîðà, ïðèñâàèâàåò çíà÷åíèå êîíòåéíåðó"
+private:
+    T *array_;											// óêàçàòåëü íà ñòåê
+    size_t array_size_;									// êîëè÷åñòâî ýëåìåíòîâ â ñòåêå
+    size_t count_;										// íîìåð òåêóùåãî ýëåìåíòà ñòåêà
 };
-
+template<typename T>
+auto newcopy(const T * item, size_t size, size_t count) -> T*
+{
+	T * buff = new T[size];
+	std::copy(item, item + count, buff);
+	return buff;
+}
 template <typename T>
 size_t stack<T>::count() const
 {
@@ -33,7 +38,7 @@ stack<T>::stack()
 }
 
 template<typename T>
-stack<T>::stack(stack const & other):array_size_(other.array_size_), count_(other.count_),array_(other.array_, other.array_size_,other.count_)
+stack<T>::stack(stack const & other):array_size_(other.array_size_), count_(other.count_),array_(newcopy(other.array_, other.array_size_,other.count_))
 {
 
 }
@@ -50,16 +55,13 @@ void stack<T>::push(T const &item)
     if (count_ == array_size_)
     {
         size_t size = array_size_ * 2 + (array_size_ == 0);
-        T *buff = new T[size];
-        for (int i = 0; i < count_; i++)
-        {
-            buff[i] = array_[i];
-        }
+        T *buff = newcopy(array_, size, array_size_);
         delete[] array_;
-        array_ = buff;
-        array_size_ = size;
-        array_[count_++] = item;
-    }
+       array_ = buff;
+		array_size_ = size;
+	}
+	array_[count_] = item;
+	++count_;
 }
 template<typename T>
 T stack<T>::pop()
@@ -71,19 +73,13 @@ T stack<T>::pop()
     return array_[--count_];
 }
 template<typename T>
-auto stack<T>::swap(stack & other) -> void
-{
-    std::swap(array_, other.array_);
-    std::swap(array_size_, other.array_size_);
-    std::swap(count_, other.count_);
-}
-
-template<typename T>
-auto stack<T>::operator=(stack const & right) -> stack & 
-{
-    if (this != &right) 
-    {
-        (stack(right)).swap(*this);
-    }
-    return *this;
+auto stack<T>::operator=(stack const & right) -> stack & {
+	if (this != &right) {
+		T* buff = newcopy(right.array_, right.array_size_, right.count_);
+		delete[] array_;
+		array_ = buff;
+		count_ = right.count_;
+		array_size_ = right.array_size_;
+	}
+	return *this;
 }
