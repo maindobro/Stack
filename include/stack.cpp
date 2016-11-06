@@ -15,6 +15,7 @@ public:
 	void pop();									//basic
 	const T& top();									//strong
 	auto operator=(stack const & right)->stack &;					//strong
+	auto empty() const -> bool; 							//noexcept
 private:
 	T *array_;											
 	size_t array_size_;									
@@ -105,5 +106,18 @@ auto stack<T>::operator=(stack const & right) -> stack &
 		newcopy(right.array_, right.array_size_, right.count_);
 	}
 	return *this;
+}
+
+template<typename T>
+auto stack<T>::empty() const -> bool
+{
+	if (count_ == 0)
+	{
+		return true;
+	} 
+	else
+	{
+		return false;
+	}
 }
 #endif
