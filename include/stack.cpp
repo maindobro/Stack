@@ -10,9 +10,8 @@ public:
 	size_t count() const;								//noexcept
 	auto push(T const &) -> void;							//strong
 	void pop();									//basic
-	T top() const;									//strong
+	const T& top() const;								//strong
 	auto operator=(stack const & right)->stack &;					//strong
-	auto empty() const -> bool;							//noexcept
 private:
 	T *array_;											
 	size_t array_size_;									
@@ -86,7 +85,7 @@ void stack<T>::pop()
 }
 
 template<typename T>
-T stack<T>::top() const
+const T& stack<T>::top()
 {
 	if (count_ == 0) 
 	{
@@ -96,18 +95,10 @@ T stack<T>::top() const
 }
 
 template<typename T>
-auto stack<T>::empty() const -> bool {
-	if (count_ == 0) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-template<typename T>
-auto stack<T>::operator=(stack const & right) -> stack & {
-	if (this != &right) {
+auto stack<T>::operator=(stack const & right) -> stack & 
+{
+	if (this != &right) 
+	{
 		delete[] array_;
 		newcopy(right.array_, right.array_size_, right.count_);
 	}
