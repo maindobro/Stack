@@ -16,8 +16,8 @@ private:
     size_t array_size_;									// êîëè÷åñòâî ýëåìåíòîâ â ñòåêå
     size_t count_;										// íîìåð òåêóùåãî ýëåìåíòà ñòåêà
 };
-template<typename T>
-auto newcopy(const T * item, size_t size, size_t count) -> T*
+template<typename>
+auto newcopy(T * item, size_t size, size_t count) -> T*
 {
 	T * buff = new T[size];
 	std::copy(item, item + count, buff);
@@ -26,7 +26,6 @@ auto newcopy(const T * item, size_t size, size_t count) -> T*
 template <typename T>
 size_t stack<T>::count() const
 {
-    std::cout << count_;
     return count_;
 }
 template <typename T>
@@ -54,14 +53,14 @@ void stack<T>::push(T const &item)
 {
     if (count_ == array_size_)
     {
-        size_t size = array_size_ * 2 + (array_size_ == 0);
-        T *buff = newcopy(array_, size, array_size_);
-        delete[] array_;
-       array_ = buff;
-		array_size_ = size;
+	    size_t size = array_size_ * 2 + (array_size_ == 0);
+	    T *buff = newcopy(array_, size, array_size_);
+	    delete[] array_;
+	    array_ = newcopy(array_, size, array_size_);
+	    array_size_ = size;
 	}
-	array_[count_] = item;
 	++count_;
+	array_[count_ - 1]= item;
 }
 template<typename T>
 T stack<T>::pop()
@@ -74,12 +73,10 @@ T stack<T>::pop()
 }
 template<typename T>
 auto stack<T>::operator=(stack const & right) -> stack & {
-	if (this != &right) {
-		T* buff = newcopy(right.array_, right.array_size_, right.count_);
+	if (this != &right) 
+	{
 		delete[] array_;
-		array_ = buff;
-		count_ = right.count_;
-		array_size_ = right.array_size_;
+		newcopy(right.array_, right.array_size_, right.count_)
 	}
 	return *this;
 }
