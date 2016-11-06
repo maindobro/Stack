@@ -1,3 +1,6 @@
+#ifndef stack_cpp
+#define stack_cpp
+#pragma once
 #include <iostream>
 
 template <typename T>
@@ -35,7 +38,6 @@ auto newcopy(const T * item, size_t size, size_t count) -> T* 				//strong
 template <typename T>
 size_t stack<T>::count() const
 {
-	std::cout << count_;
 	return count_;
 }
 template <typename T>
@@ -104,3 +106,4 @@ auto stack<T>::operator=(stack const & right) -> stack &
 	}
 	return *this;
 }
+#endif
