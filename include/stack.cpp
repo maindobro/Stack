@@ -4,26 +4,25 @@ template <typename T>
 class stack
 {
 public:
-	stack();							//noexcept
-	stack(stack const &);						//strong
-	~stack();							//noexcept
-	size_t count() const;						//noexcept
-	auto push(T const &) -> void;					//strong
-	void pop();							//basic
-	T top() const;							//strong
-	auto empty() const -> bool;					//noexcept
-	auto operator=(stack const & right)->stack &;			//strong
+	stack();									//noexcept
+	stack(stack const &);								//strong
+	~stack();									//noexcept
+	size_t count() const;								//noexcept
+	auto push(T const &) -> void;							//strong
+	void pop();									//basic
+	T top() const;									//strong
+	auto operator=(stack const & right)->stack &;					//strong
+	auto empty() const -> bool;							//noexcept
 private:
-	T *array_;							
-	size_t array_size_;							
-	size_t count_;							
+	T *array_;											
+	size_t array_size_;									
+	size_t count_;										
 };
-
 template<typename T>
-auto newcopy(const T * item, size_t size, size_t count) -> T*		//strong
+auto newcopy(const T * item, size_t size, size_t count) -> T* 				//strong
 {
-	T * buff = new T[size];
-		try 
+	T * buff = new T[size]; 
+	try 
 	{
 		std::copy(item, item + count, buff);
 	}
@@ -34,14 +33,12 @@ auto newcopy(const T * item, size_t size, size_t count) -> T*		//strong
 	}
 	return buff;
 }
-
 template <typename T>
 size_t stack<T>::count() const
 {
 	std::cout << count_;
 	return count_;
 }
-
 template <typename T>
 stack<T>::stack()
 {
@@ -75,15 +72,14 @@ void stack<T>::push(T const &item)
 	array_[count_] = item;
 	++count_;
 }
-
 template<typename T>
-T stack<T>::pop()
+void stack<T>::pop() 
 {
-	if (count_ == 0)
+	if (count_ == 0) 
 	{
 		throw std::logic_error("Stack is empty!");
 	}
-		else 
+	else 
 	{
 		count_--;
 	}
