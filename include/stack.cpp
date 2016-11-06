@@ -9,26 +9,37 @@ public:
 	~stack();							//noexcept
 	size_t count() const;						//noexcept
 	auto push(T const &) -> void;					//strong
-	T pop();							//basic
+	void pop();							//basic
 	auto operator=(stack const & right)->stack &;			//strong
 private:
 	T *array_;							
 	size_t array_size_;							
 	size_t count_;							
 };
+
 template<typename T>
 auto newcopy(const T * item, size_t size, size_t count) -> T*		//strong
 {
 	T * buff = new T[size];
-	std::copy(item, item + count, buff);
+		try 
+	{
+		std::copy(item, item + count, buff);
+	}
+	catch (...) 
+	{
+		delete[] buff;
+		throw;
+	}
 	return buff;
 }
+
 template <typename T>
 size_t stack<T>::count() const
 {
 	std::cout << count_;
 	return count_;
 }
+
 template <typename T>
 stack<T>::stack()
 {
@@ -62,6 +73,7 @@ void stack<T>::push(T const &item)
 	array_[count_] = item;
 	++count_;
 }
+
 template<typename T>
 T stack<T>::pop()
 {
@@ -69,8 +81,32 @@ T stack<T>::pop()
 	{
 		throw std::logic_error("Stack is empty!");
 	}
-	return array_[--count_];
+		else 
+	{
+		count_--;
+	}
 }
+
+template<typename T>
+T stack<T>::top() const
+{
+	if (count_ == 0) 
+	{
+		throw ("Stack is empty!");
+	}
+	return array_[count_ - 1];
+}
+
+template<typename T>
+auto stack<T>::empty() const -> bool {
+	if (count_ == 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 template<typename T>
 auto stack<T>::operator=(stack const & right) -> stack & {
 	if (this != &right) {
