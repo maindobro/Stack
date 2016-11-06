@@ -13,7 +13,7 @@ public:
 	size_t count() const;								//noexcept
 	auto push(T const &) -> void;							//strong
 	void pop();									//basic
-	const T& top() const;								//strong
+	const T& top();									//strong
 	auto operator=(stack const & right)->stack &;					//strong
 private:
 	T *array_;											
