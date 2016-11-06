@@ -4,20 +4,20 @@ template <typename T>
 class stack
 {
 public:
-	stack();							
-	stack(stack const &);						
-	~stack();							
-	size_t count() const;						
-	auto push(T const &) -> void;					
-	T pop();							
-	auto operator=(stack const & right)->stack &;			
+	stack();							//noexcept
+	stack(stack const &);						//strong
+	~stack();							//noexcept
+	size_t count() const;						//noexcept
+	auto push(T const &) -> void;					//strong
+	T pop();							//basic
+	auto operator=(stack const & right)->stack &;			//strong
 private:
 	T *array_;							
 	size_t array_size_;							
 	size_t count_;							
 };
 template<typename T>
-auto newcopy(const T * item, size_t size, size_t count) -> T*		
+auto newcopy(const T * item, size_t size, size_t count) -> T*		//strong
 {
 	T * buff = new T[size];
 	std::copy(item, item + count, buff);
