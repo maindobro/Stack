@@ -3,6 +3,25 @@
 #pragma once
 #include <iostream>
 
+template <typename T1, typename T2>
+void construct(T1 * ptr, T2 const & value) {
+    new(ptr) T1 (value);
+}
+
+template <typename T>
+void destroy(T * ptr) noexcept
+{
+    ptr->~T();
+}
+
+template <typename FwdIter>
+void destroy(FwdIter first, FwdIter last) noexcept
+{
+    for (; first != last; ++first) {
+        destroy(&*first);
+    }
+}
+
 template <typename T>
 class allocator
 {
@@ -20,10 +39,29 @@ protected:
 };
 
 template <typename T>
-class stack
+allocator<T>::allocator(size_t size) : ptr_((T*)(operator new(size*sizeof(T)))), size_(size), count_(0){};
+
+template<typename T>
+allocator<T>::~allocator()
+{ 
+	operator delete(ptr_); 
+}
+
+template<typename T>
+auto allocator<T>::swap(allocator & other) -> void 
+{
+	std::swap(ptr_, other.ptr_);
+	std::swap(count_, other.count_);
+	std::swap(size_, other.size_);
+}
+
+
+
+template <typename T>
+class stack : private allocator<T>
 {
 public:
-	stack();									//noexcept
+	stack(size_t size = 0);								//noexcept
 	stack(stack const &);								//strong
 	~stack();									//noexcept
 	size_t count() const;								//noexcept
@@ -31,11 +69,7 @@ public:
 	void pop();									//basic
 	const T& top();									//strong
 	auto operator=(stack const & right)->stack &;					//strong
-	auto empty() const -> bool; 							//noexcept
-private:
-	T *array_;											
-	size_t array_size_;									
-	size_t count_;										
+	auto empty() const -> bool; 							//noexcept										
 };
 template<typename T>
 auto newcopy(const T * item, size_t size, size_t count) -> T* 				//strong
@@ -55,21 +89,17 @@ auto newcopy(const T * item, size_t size, size_t count) -> T* 				//strong
 template <typename T>
 size_t stack<T>::count() const
 {
-	return count_;
+	return allocator<T>::count_;
 }
 template <typename T>
-stack<T>::stack()
-{
-	array_size_ = 0;
-	array_ = new T[array_size_];
-	count_ = 0;
-}
+stack<T>::stack(size_t size):allocator<T>(size){}
 
 template<typename T>
-stack<T>::stack(stack const & other) :array_size_(other.array_size_), count_(other.count_), array_(newcopy(other.array_, other.array_size_, other.count_))
+stack<T>::stack(stack const & other) : allocator<T>(other.size_)
 {
-
-}
+for (size_t i = 0; i < other.count_; i++) construct(allocator<T>::ptr_ + i, other.ptr_[i]);
+	allocator<T>::count_ = other.count_;
+};
 
 template <typename T>
 stack<T>::~stack()
@@ -80,37 +110,37 @@ stack<T>::~stack()
 template<typename T>
 void stack<T>::push(T const &item)
 {
-	if (count_ == array_size_)
+	if (allocator<T>::count_ == allocator<T>::array_size_)
 	{
-		size_t size = array_size_ * 2 + (array_size_ == 0);
-		delete[] array_;
-		array_ = newcopy(array_, size, array_size_);
-		array_size_ = size;
+		size_t array_size = allocator<T>::size_ * 2 + (allocator<T>::size_ == 0);
+		stack<T> temp(array_size);
+		while (temp.count() < allocator<T>::count_) temp.push(allocator<T>::ptr_[temp.count()]); 
+		this->swap(temp);
 	}
-	array_[count_] = item;
-	++count_;
+	construct(allocator<T>::ptr_ + allocator<T>::count_, item);
+	++allocator<T>::count_;
 }
 template<typename T>
 void stack<T>::pop() 
 {
-	if (count_ == 0) 
+	if (allocator<T>::count_ == 0) 
 	{
-		throw std::logic_error("Stack is empty!");
-	}
+		throw ("Stack is empty!");
+	} 
 	else 
 	{
-		count_--;
+		allocator<T>::count_--;
 	}
 }
 
 template<typename T>
 const T& stack<T>::top()
 {
-	if (count_ == 0) 
+	if (allocator<T>::count_ == 0)
 	{
 		throw ("Stack is empty!");
 	}
-	return array_[count_ - 1];
+	return allocator<T>::ptr_[allocator<T>::count_ - 1];
 }
 
 template<typename T>
@@ -118,8 +148,13 @@ auto stack<T>::operator=(stack const & right) -> stack &
 {
 	if (this != &right) 
 	{
-		delete[] array_;
-		newcopy(right.array_, right.array_size_, right.count_);
+	stack<T> temp (right.size_);
+	while (temp.count_ < right.count_)
+	{
+		construct(temp.ptr_ + temp.count_, right.ptr_[temp.count_]);
+		++temp.count_;
+	}	
+	this -> swap(temp);
 	}
 	return *this;
 }
@@ -127,7 +162,7 @@ auto stack<T>::operator=(stack const & right) -> stack &
 template<typename T>
 auto stack<T>::empty() const -> bool
 {
-	if (count_ == 0)
+if (allocator<T>::count_ == 0)
 	{
 		return true;
 	} 
