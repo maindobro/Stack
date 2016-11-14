@@ -110,7 +110,7 @@ stack<T>::~stack()
 template<typename T>
 void stack<T>::push(T const &item)
 {
-	if (allocator<T>::count_ == allocator<T>::array_size_)
+	if (allocator<T>::count_ == allocator<T>::size_)
 	{
 		size_t array_size = allocator<T>::size_ * 2 + (allocator<T>::size_ == 0);
 		stack<T> temp(array_size);
