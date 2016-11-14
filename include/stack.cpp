@@ -102,10 +102,7 @@ for (size_t i = 0; i < other.count_; i++) construct(allocator<T>::ptr_ + i, othe
 };
 
 template <typename T>
-stack<T>::~stack()
-{
-	delete[] array_;
-}
+stack<T>::~stack(){}
 
 template<typename T>
 void stack<T>::push(T const &item)
