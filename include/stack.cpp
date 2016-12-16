@@ -2,6 +2,7 @@
 #define stack_cpp
 #pragma once
 #include <iostream>
+#include <memory>
 
 class bitset
 {
@@ -70,25 +71,6 @@ auto bitset::counter() const -> size_t
 }
 
 /*=====================================================================================*/
-
-template <typename T1, typename T2>
-void construct(T1 * ptr, T2 const & value) {
-    new(ptr) T1 (value);
-}
-
-template <typename T>
-void destroy(T * ptr) noexcept
-{
-    ptr->~T();
-}
-
-template <typename FwdIter>
-void destroy(FwdIter first, FwdIter last) noexcept
-{
-    for (; first != last; ++first) {
-        destroy(&*first);
-    }
-}
 
 template <typename T>
 class allocator
