@@ -89,9 +89,9 @@ public:
 	auto count() const -> size_t;
 	auto full() const -> bool;
 	auto empty() const -> bool;
+	auto swap(allocator & other) -> void;
 private:
 	auto destroy(T * first, T * last) -> void;
-	auto swap(allocator & other) -> void;
 	T * ptr_;
 	size_t size_;
 	std::unique_ptr<bitset> map_;
