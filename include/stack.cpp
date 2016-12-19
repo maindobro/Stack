@@ -197,6 +197,7 @@ auto allocator<T>::swap(allocator & other) -> void
 	std::swap(ptr_, other.ptr_);
 	std::swap(map_, other.map_);
 	std::swap(size_, other.size_);
+	std::swap(count_, other.count_)
 }
 
 /*=====================================================================================*/
@@ -210,7 +211,7 @@ public:
 	stack(stack const & other);
 	auto pop() -> std::shared_ptr<T>;
 	auto push(T const &vaule) -> void;							//strong
-	auto operator=(stack const & right)->stack &;					//strong
+	auto operator=(stack const & other)->stack &;					//strong
 	auto empty() const -> bool; 							//noexcept
 	auto count() const -> size_t;
 private:
@@ -230,14 +231,14 @@ stack<T>::stack(stack const & other) : allocator_(0), m()
 }
 
 template <typename T>
-void stack<T>::push(T const &item) 
+void stack<T>::push(T const &value) 
 {
 	std::lock_guard<std::mutex> locker(m);
 	if (allocator_.full()) 
 	{
 		allocator_.resize();
 	}
-	allocator_.construct(allocator_.get() + allocator_.count(), val);
+	allocator_.construct(allocator_.get() + allocator_.count(), value);
 }
 
 template <typename T>
@@ -251,9 +252,9 @@ auto stack<T>::pop()->std::shared_ptr<T>
 }
 
 template<typename T>
-auto stack<T>::operator=(stack const & right)-> stack &
+auto stack<T>::operator=(stack const & other)-> stack &
 { 
-	if (this != &right) 
+	if (this != &other) 
 	{
 		std::lock(m, other.m);
 		std::lock_guard<std::mutex> locker1(m, std::adopt_lock);
