@@ -57,3 +57,4 @@ SCENARIO("threads", "[threads]"){
 	t2.join();
   REQUIRE(s.count()==3);
 }
+
