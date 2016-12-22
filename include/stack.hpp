@@ -233,14 +233,14 @@ stack<T>::stack(stack const & other) : allocator_(0), m()
 }
 
 template <typename T>
-void stack<T>::push(T const &value) 
+void stack<T>::push(T const &val) 
 {
 	std::lock_guard<std::mutex> locker(m);
 	if (allocator_.full()) 
 	{
 		allocator_.resize();
 	}
-	allocator_.construct(allocator_.get() + allocator_.count(), value);
+	allocator_.construct(allocator_.get() + allocator_.count(), val);
 }
 
 template <typename T>
