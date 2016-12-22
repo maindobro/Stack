@@ -2,6 +2,7 @@
 #define stack_cpp
 #pragma once
 #include <iostream>
+#include <thread>
 #include <memory>
 
 class bitset
