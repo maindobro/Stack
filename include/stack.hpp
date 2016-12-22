@@ -93,6 +93,7 @@ public:
 private:
 	auto destroy(T * first, T * last) -> void;
 	T * ptr_;
+	size_t count_;
 	size_t size_;
 	std::unique_ptr<bitset> map_;
 
